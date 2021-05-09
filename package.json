@@ -1,0 +1,10 @@
+{
+  "name": "video_api",
+  "version": "1.0.0",
+  "dependencies": {
+    
+  },
+  "apidoc": {
+    "title": "视频网站API"
+  }
+}
