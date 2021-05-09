@@ -111,17 +111,43 @@ class Users(db.Model):
     avatar_url = db.Column(db.String(256), nullable=False, default="/static/avatar/default")
     likes = db.Column(db.Integer, default=0, index=True)
     fans = db.Column(db.Integer, default=0, index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
         # 如果没有传入身份，则将身份设置为roles表中
         if self.role_id is None:
             self.role_id = Roles.query.filter_by(default=True).first().id
-        self.fans_number = self.follower.count()
-        self.followed_number = self.followed.count()
+        # self.fans_number = self.follower.count()
+        # self.followed_number = self.followed.count()
 
     def __repr__(self):
-        return "<user >"
+        return "<user %r>" % self.username
+
+    @property
+    def password(self):
+        """为Users类添加一个password属性，当直接用User.password访问时抛出错误"""
+        raise AttributeError("密码不可见")
+
+    @password.setter
+    def password(self, password):
+        """
+        Users类的属性password的默认构造器，可以直接通过Users类的对象.password=xxx来设置密码，
+        并将密码加密后保存在私有属性(同时也是数据库users表中的密码字段)__password_hash中
+        :param password: 要设置的密码
+        """
+
+        # 使用generate_password_hash对密码进行加密
+        self.__password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        """
+        验证密码是否正确，从数据库中取得__password_hash和password做比对
+        :param password:
+        :return:
+        """
+        return check_password_hash(self.__password_hash, password)
+
 
 # todo：用户间关注与被关注表
 
