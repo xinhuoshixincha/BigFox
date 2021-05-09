@@ -1,10 +1,10 @@
 {
-  "name": "video_api",
+  "name": "big_fox",
   "version": "1.0.0",
   "dependencies": {
     
   },
   "apidoc": {
-    "title": "视频网站API"
+    "title": "大🦊狐"
   }
 }
