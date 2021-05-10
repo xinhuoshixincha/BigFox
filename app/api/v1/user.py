@@ -530,3 +530,49 @@ def get_user_articles():
         @apiUse ParamTypeError
     """
     pass
+
+
+@api.route('/v1/users/user/confirm-school', methods=['POST'])
+def confirm_user_school():
+    """
+        @api {POST} /api/v1/users/user/confirm-school 用户学校认证
+        @apiName 用户学校认证
+        @apiGroup 用户
+        @apiVersion 1.0.0
+        @apiDescription
+        对用户进行学校认证, 必须传入学信网学籍信息或者学校邮箱(2选1)
+
+        @apiHeader {String=multipart/form-data,application/x-www-form-urlencoded} Content-Type 浏览器编码类型
+        @apiHeader {String} Authorization 用户认证令牌
+
+        @apiParam {Number} userId 用户编号
+        @apiParam {String} realName 真实姓名
+        @apiParam {String} realId 身份证号
+        @apiParam {String} school 学校
+        @apiParam {String} profession 专业
+        @apiParam {Number="0 -- 学校邮箱认证", "1 -- 学信网材料认证"} confirmType 认证方式
+        @apiParam {File='PDF文件','图片'} [studentStatusInfo] 学信网学籍信息
+        @apiParam {String} [schoolEmail] 学校邮箱
+
+        @apiUse Success200
+        @apiSuccessExample {json} 返回值示例
+        {
+            "result":true,
+            "code":200,
+            "message":"",
+            "header":{},
+            "data":{}
+        }
+
+       @apiUse Errors
+       @apiUse ParamTypeError
+       @apiUse ParamValueError
+       @apiUse ParamNeed
+       @apiUse ResourceTypeError
+       @apiUse ResourceUploadFailed
+       @apiUse UserNotFound
+       @apiUse CompetenceError
+    """
+
+
+    pass

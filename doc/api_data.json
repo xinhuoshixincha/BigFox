@@ -2017,6 +2017,240 @@
   },
   {
     "type": "POST",
+    "url": "/api/v1/users/user/confirm-school",
+    "title": "用户学校认证",
+    "name": "用户学校认证",
+    "group": "用户",
+    "version": "1.0.0",
+    "description": "<p>对用户进行学校认证, 必须传入学信网学籍信息或者学校邮箱(2选1)</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "allowedValues": [
+              "multipart/form-data",
+              "application/x-www-form-urlencoded"
+            ],
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>浏览器编码类型</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>用户认证令牌</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>用户编号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "realName",
+            "description": "<p>真实姓名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "realId",
+            "description": "<p>身份证号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "school",
+            "description": "<p>学校</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "profession",
+            "description": "<p>专业</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "allowedValues": [
+              "\"0 -- 学校邮箱认证\"",
+              "\"1 -- 学信网材料认证\""
+            ],
+            "optional": false,
+            "field": "confirmType",
+            "description": "<p>认证方式</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "File",
+            "allowedValues": [
+              "'PDF文件'",
+              "'图片'"
+            ],
+            "optional": true,
+            "field": "studentStatusInfo",
+            "description": "<p>学信网学籍信息</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "schoolEmail",
+            "description": "<p>学校邮箱</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回值示例",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ],
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "allowedValues": [
+              "\"true -- 成功\"",
+              "\"false -- 失败\""
+            ],
+            "optional": false,
+            "field": "result",
+            "description": "<p>接口调用结果</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>http状态码</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "allowedValues": [
+              "\"接口调用成功时为空\"",
+              "\"接口调用失败时为错误信息\""
+            ],
+            "optional": false,
+            "field": "message",
+            "description": "<p>服务器返回的消息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>服务器返回的数据</p>"
+          }
+        ]
+      }
+    },
+    "filename": "app/api/v1/user.py",
+    "groupTitle": "用户",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "result",
+            "description": "<p>是否正确</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "code",
+            "description": "<p>错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "message",
+            "description": "<p>错误信息</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "data",
+            "description": "<p>返回数据</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "参数类型错误",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "参数值错误",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数值错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "缺少参数值",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "文件类型错误",
+          "content": "{\n    \"result\":false,\n    \"code\":415,\n    \"message\":\"文件类型错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "资源上传失败",
+          "content": "{\n    \"result\":false,\n    \"code\":408,\n    \"message\":\"请求超时，资源上传失败\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户未找到",
+          "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
+          "type": "json"
+        },
+        {
+          "title": "权限不足",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"权限不足!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
     "url": "/api/v1/users/login",
     "title": "登录",
     "name": "登录",
