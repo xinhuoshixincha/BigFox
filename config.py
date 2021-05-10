@@ -24,7 +24,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get("DEV_DATABASE_URL") or 'postgresql://' \
                                                                     'PiLiPaLaAdmin:zhimakaimen@127.0.0.1/PiLiPaLaTest'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_ECHO = True
 
     @staticmethod
     def init_app(app):

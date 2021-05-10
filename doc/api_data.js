@@ -1463,6 +1463,181 @@ define({ "api": [
     "groupTitle": "用户"
   },
   {
+    "type": "POST",
+    "url": "/api/v1/users/user/follow",
+    "title": "关注",
+    "name": "关注",
+    "group": "用户",
+    "version": "1.0.0",
+    "description": "<p>传入关注者的用户编号与被关注者的用户编号，使关注者关注被关注者</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "allowedValues": [
+              "application/json"
+            ],
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>浏览器编码类型</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>关注者的用户认证令牌</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "followerId",
+            "description": "<p>关注者编号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "followedId",
+            "description": "<p>被关注者编号</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "参数示例",
+          "content": "{\n    \"followerId\":1,\n    \"followedId\":2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回值示例",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ],
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "allowedValues": [
+              "\"true -- 成功\"",
+              "\"false -- 失败\""
+            ],
+            "optional": false,
+            "field": "result",
+            "description": "<p>接口调用结果</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>http状态码</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "allowedValues": [
+              "\"接口调用成功时为空\"",
+              "\"接口调用失败时为错误信息\""
+            ],
+            "optional": false,
+            "field": "message",
+            "description": "<p>服务器返回的消息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>服务器返回的数据</p>"
+          }
+        ]
+      }
+    },
+    "filename": "app/api/v1/user.py",
+    "groupTitle": "用户",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "result",
+            "description": "<p>是否正确</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "code",
+            "description": "<p>错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "message",
+            "description": "<p>错误信息</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "data",
+            "description": "<p>返回数据</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "缺少参数值",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "参数类型错误",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "权限不足",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"权限不足!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户未找到",
+          "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "DELETE",
     "url": "/api/v1/users/user",
     "title": "删除用户",
@@ -1632,6 +1807,142 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/api/v1/users/user/follow",
+    "title": "判断某用户是否关注某用户",
+    "name": "判断某用户是否关注某用户",
+    "group": "用户",
+    "version": "1.0.0",
+    "description": "<p>传入用户1编号和用户2编号，判断用户1是否关注用户2</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "allowedValues": [
+              "application/json"
+            ],
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>浏览器编码类型</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userOneId",
+            "description": "<p>用户1编号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userTwoId",
+            "description": "<p>用户2编号</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "参数示例",
+          "content": "{\n    \"userOneId\":1,\n    \"userTwoId\":2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "data.isFollowing",
+            "description": "<p>是否关注</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "allowedValues": [
+              "\"true -- 成功\"",
+              "\"false -- 失败\""
+            ],
+            "optional": false,
+            "field": "result",
+            "description": "<p>接口调用结果</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>http状态码</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "allowedValues": [
+              "\"接口调用成功时为空\"",
+              "\"接口调用失败时为错误信息\""
+            ],
+            "optional": false,
+            "field": "message",
+            "description": "<p>服务器返回的消息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>服务器返回的数据</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "返回值示例",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{\n        \"isFollowing\":true\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "app/api/v1/user.py",
+    "groupTitle": "用户",
+    "error": {
+      "examples": [
+        {
+          "title": "缺少参数值",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户未找到",
+          "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
+          "type": "json"
+        },
+        {
+          "title": "参数类型错误",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "GET",
     "url": "/api/v1/users/user/admin",
     "title": "判断用户是否是管理员",
     "name": "判断用户是否是管理员",
@@ -1788,6 +2099,186 @@ define({ "api": [
         {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "DELETE",
+    "url": "/api/v1/users/user/follow",
+    "title": "取消关注",
+    "name": "取消关注",
+    "group": "用户",
+    "version": "1.0.0",
+    "description": "<p>传入关注者编号和被关注者编号，取消关注者对被关注者的关注</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "allowedValues": [
+              "application/json"
+            ],
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>浏览器编码类型</p>"
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>用户认证令牌</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "followerId",
+            "description": "<p>关注者编号</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "followedId",
+            "description": "<p>被关注者编号</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "参数示例",
+          "content": "{\n    \"followerId\":1,\n    \"followedId\":2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "没有关注过该用户",
+          "content": "{\n    \"result\":false,\n    \"code\":403,\n    \"message\":\"没有关注过该用户\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "缺少参数值",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "参数类型错误",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户未找到",
+          "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
+          "type": "json"
+        },
+        {
+          "title": "权限不足",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"权限不足!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ],
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "result",
+            "description": "<p>是否正确</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "code",
+            "description": "<p>错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "message",
+            "description": "<p>错误信息</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "data",
+            "description": "<p>返回数据</p>"
+          }
+        ]
+      }
+    },
+    "filename": "app/api/v1/user.py",
+    "groupTitle": "用户",
+    "success": {
+      "fields": {
+        "Success 204": [
+          {
+            "group": "Success 204",
+            "type": "Boolean",
+            "allowedValues": [
+              "\"true -- 成功\"",
+              "\"false -- 失败\""
+            ],
+            "optional": false,
+            "field": "result",
+            "description": "<p>接口调用结果</p>"
+          },
+          {
+            "group": "Success 204",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>http状态码</p>"
+          },
+          {
+            "group": "Success 204",
+            "type": "String",
+            "allowedValues": [
+              "\"接口调用成功时为空\"",
+              "\"接口调用失败时为错误信息\""
+            ],
+            "optional": false,
+            "field": "message",
+            "description": "<p>服务器返回的消息</p>"
+          },
+          {
+            "group": "Success 204",
+            "type": "Object",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Success 204",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>服务器返回的数据</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "返回值示例",
+          "content": "{\n    \"result\":true,\n    \"code\":204,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]

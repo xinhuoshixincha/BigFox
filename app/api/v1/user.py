@@ -574,5 +574,125 @@ def confirm_user_school():
        @apiUse CompetenceError
     """
 
+    pass
 
+
+@api.route('/v1/users/user/follow', methods=['POST'])
+def follow():
+    """
+        @api {POST} /api/v1/users/user/follow 关注
+        @apiName 关注
+        @apiGroup 用户
+        @apiVersion 1.0.0
+        @apiDescription
+        传入关注者的用户编号与被关注者的用户编号，使关注者关注被关注者
+
+        @apiHeader {String=application/json} Content-Type 浏览器编码类型
+        @apiHeader {String} Authorization 关注者的用户认证令牌
+
+        @apiParam {Number} followerId 关注者编号
+        @apiParam {Number} followedId 被关注者编号
+        @apiParamExample {json} 参数示例
+        {
+            "followerId":1,
+            "followedId":2
+        }
+
+        @apiUse Success200
+        @apiSuccessExample {json} 返回值示例
+        {
+            "result":true,
+            "code":200,
+            "message":"",
+            "header":{},
+            "data":{}
+        }
+
+        @apiUse Errors
+        @apiUse ParamNeed
+        @apiUse ParamTypeError
+        @apiUse CompetenceError
+        @apiUse UserNotFound
+    """
+    pass
+
+
+@api.route('/v1/users/user/follow', methods=['DELETE'])
+def unfollow():
+    """
+        @api {DELETE} /api/v1/users/user/follow 取消关注
+        @apiName 取消关注
+        @apiGroup 用户
+        @apiVersion 1.0.0
+        @apiDescription
+        传入关注者编号和被关注者编号，取消关注者对被关注者的关注
+
+        @apiHeader {String=application/json} Content-Type 浏览器编码类型
+        @apiHeader {String} Authorization 用户认证令牌
+
+        @apiParam {Number} followerId 关注者编号
+        @apiParam {Number} followedId 被关注者编号
+        @apiParamExample {json} 参数示例
+        {
+            "followerId":1,
+            "followedId":2
+        }
+
+        @apiUse Success204
+
+        @apiUse Errors
+        @apiUse ParamNeed
+        @apiUse ParamTypeError
+        @apiUse UserNotFound
+        @apiUse CompetenceError
+        @apiErrorExample {json} 没有关注过该用户
+        {
+            "result":false,
+            "code":403,
+            "message":"没有关注过该用户",
+            "header":{},
+            "data":{}
+        }
+    """
+    pass
+
+
+@api.route('/v1/users/user/follow', methods=['GET'])
+def is_following():
+    """
+        @api {GET} /api/v1/users/user/follow 判断某用户是否关注某用户
+        @apiName 判断某用户是否关注某用户
+        @apiGroup 用户
+        @apiVersion 1.0.0
+        @apiDescription
+        传入用户1编号和用户2编号，判断用户1是否关注用户2
+        
+        @apiHeader {String=application/json} Content-Type 浏览器编码类型
+    
+        
+        @apiParam {Number} userOneId 用户1编号
+        @apiParam {Number} userTwoId 用户2编号
+        @apiParamExample {json} 参数示例
+        {
+            "userOneId":1,
+            "userTwoId":2
+        }
+
+        @apiUse Success200
+        @apiSuccess {Boolean} data.isFollowing 是否关注
+        @apiSuccessExample {json} 返回值示例
+        {
+            "result":true,
+            "code":200,
+            "message":"",
+            "header":{},
+            "data":{
+                "isFollowing":true
+            }
+        }
+        
+        @apiUse ParamNeed
+        @apiUse UserNotFound
+        @apiUse ParamTypeError
+    """
     pass
