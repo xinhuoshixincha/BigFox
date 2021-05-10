@@ -405,6 +405,45 @@ def judge_admin():
     pass
 
 
+@api.route('/v1/users/user/super-admin', methods=['GET'])
+def judge_admin():
+    """
+        @api {GET} /api/v1/users/user/super-admin 判断用户是否是超级管理员
+        @apiName 判断用户是否是超级管理员
+        @apiGroup 用户
+        @apiVersion 1.0.0
+        @apiDescription
+        判断用户是不是超级管理员
+
+        @apiHeader {String=application/json} Content-Type 浏览器编码类型
+
+        @apiParam {Number} userId 要判断的用户的编号
+        @apiParamExample {json} 参数示例
+        {
+            "userId":1
+        }
+
+        @apiUse Success200
+        @apiSuccess {Boolean} data.isSuperAdmin 是否是超级管理员
+        @apiSuccessExample {json} 返回值示例
+        {
+            "result":true,
+            "code":200,
+            "message":"",
+            "header":{},
+            "data":{
+                "isSuperAdmin":true
+            }
+        }
+
+        @apiUse Errors
+        @apiUse UserNotFound
+        @apiUse ParamNeed
+        @apiUse ParamTypeError
+    """
+    pass
+
+
 @api.route('/v1/users/user/videos', methods=['GET'])
 def get_user_videos():
     """
