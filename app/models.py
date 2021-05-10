@@ -79,7 +79,9 @@ class Roles(db.Model):
     def insert_roles():
         """向数据库中插入几个角色"""
         roles = {
-            'User': [Permissions.LIKE, Permissions.FOLLOW, Permissions.COMMENT, Permissions.UPLOAD, Permissions.DELETE],
+            'User': [],
+            'AuthenticatedUser': [Permissions.LIKE, Permissions.FOLLOW, Permissions.COMMENT, Permissions.UPLOAD,
+                                  Permissions.DELETE],
             'Admin': [Permissions.LIKE, Permissions.FOLLOW, Permissions.COMMENT, Permissions.UPLOAD, Permissions.DELETE,
                       Permissions.DELETE_OTHER, Permissions.MODIFY_USER],
             'SuperAdmin': [Permissions.LIKE, Permissions.FOLLOW, Permissions.COMMENT, Permissions.UPLOAD,
@@ -109,9 +111,28 @@ class Users(db.Model):
     email = db.Column(db.String(64), unique=True, nullable=False, index=True)
     registration_time = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     avatar_url = db.Column(db.String(256), nullable=False, default="/static/avatar/default")
+
     likes = db.Column(db.Integer, default=0, index=True)
     fans = db.Column(db.Integer, default=0, index=True)
+
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    # 真实姓名
+    real_name = db.Column(db.String(64), nullable=True, unique=True)
+    # 身份证号
+    real_id = db.Column(db.String(18), nullable=True, unique=True)
+    # 真实学校
+    real_school = db.Column(db.String(64), nullable=True)
+    # 专业
+    real_profession = db.Column(db.String(64), nullable=True)
+    # 学校邮箱
+    real_school_email = db.Column(db.String(64), nullable=True, unique=True)
+    # 学信网材料链接
+    student_status_info = db.Column(db.String(64), nullable=True, unique=True)
+    # 是否认证成功
+    school_confirmed = db.Column(db.Boolean, default=False)
+    # 认证方式 0代表学校邮箱认证，1代表提交学信网信息认证
+    confirm_type = db.Column(db.Integer, default=0, nullable=False)
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
@@ -143,10 +164,38 @@ class Users(db.Model):
     def verify_password(self, password):
         """
         验证密码是否正确，从数据库中取得__password_hash和password做比对
-        :param password:
-        :return:
+        :param password:要验证的密码
+        :return:密码是否正确
         """
         return check_password_hash(self.__password_hash, password)
+
+    def change_password(self, new_password):
+        """
+        修改密码
+        :param new_password:新的密码
+        """
+        self.__password_hash = generate_password_hash(new_password)
+
+    def can(self, perm):
+        """
+        检查用户是否有perm权限
+        :param perm:要检查的权限
+        """
+        role = Roles.query.filter_by(id=self.role_id).first()
+        return role is None and role.has_permission(perm)
+
+    def is_admin(self):
+        """
+        检查用户是否是管理员
+        """
+        return self.can(Permissions.DELETE_OTHER) & self.can(Permissions.MODIFY_USER)
+
+    def is_super_admin(self):
+        """
+        是否是超级管理员
+        """
+        return self.can(Permissions.MODIFY_ADMIN)
+
 
 
 # todo：用户间关注与被关注表

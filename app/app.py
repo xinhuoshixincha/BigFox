@@ -51,13 +51,6 @@
         "data":{}
     }
 """
-"""
-    @apiDefine ErrorsExample
-    @apiErrorExample {json} 这是一个废弃的用法
-    {
-        "todo":"删除"
-    }
-"""
 
 """
     @apiDefine Success200
