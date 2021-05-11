@@ -2,6 +2,10 @@ from . import db
 from datetime import datetime
 # 利用此包对密码进行加密
 from werkzeug.security import generate_password_hash, check_password_hash
+# 利用此包生成token、校验token
+from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
+from flask import current_app
+from flask import jsonify
 
 
 class Permissions:
@@ -254,6 +258,13 @@ class Users(db.Model):
                 self.likes -= 1
                 user.fans -= 1
 
+    def get_authorization(self):
+        print(current_app.config['SECRET_KEY'])
+        print(current_app.config['AUTHORIZATION_EXPIRES_TIME'])
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'],
+                                            expires_in=current_app.config['AUTHORIZATION_EXPIRES_TIME'])
+        token = s.dumps({"userId": self.id}).decode('ascii')
+        return jsonify(Authorization="BF " + token)
 # todo：视频表模型
 
 

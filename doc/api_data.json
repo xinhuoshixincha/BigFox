@@ -174,6 +174,16 @@
           "title": "文件类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":415,\n    \"message\":\"文件类型错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ]
     }
@@ -367,6 +377,16 @@
         {
           "title": "文件类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":415,\n    \"message\":\"文件类型错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -576,6 +596,16 @@
           "title": "文件类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":415,\n    \"message\":\"文件类型错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ]
     }
@@ -743,6 +773,16 @@
         {
           "title": "资源未找到",
           "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"资源未找到\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -1422,6 +1462,16 @@
           "title": "文件类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":415,\n    \"message\":\"文件类型错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ],
       "fields": {
@@ -1633,6 +1683,16 @@
           "title": "用户未找到",
           "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ]
     }
@@ -1800,6 +1860,16 @@
         {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -2351,6 +2421,16 @@
           "title": "权限不足",
           "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"权限不足!\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ],
       "fields": {
@@ -2898,6 +2978,16 @@
         {
           "title": "权限不足",
           "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"权限不足!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -4149,6 +4239,16 @@
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ]
     }
@@ -4351,6 +4451,16 @@
           "title": "资源上传失败",
           "content": "{\n    \"result\":false,\n    \"code\":408,\n    \"message\":\"请求超时，资源上传失败\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ]
     }
@@ -4519,6 +4629,16 @@
         {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -5187,6 +5307,16 @@
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
         }
       ]
     }
@@ -5354,6 +5484,16 @@
         {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -5551,6 +5691,16 @@
         {
           "title": "缺少参数值",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
@@ -5753,6 +5903,16 @@
         {
           "title": "缺少参数值",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "登录过期",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"登录过期\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户认证令牌错误",
+          "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]

@@ -168,6 +168,8 @@ def upload_video():
         @apiUse ParamNeed
         @apiUse ResourceTypeError
         @apiUse ResourceUploadFailed
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -199,5 +201,7 @@ def delete_video():
         @apiUse ResourceNotFound
         @apiUse ParamNeed
         @apiUse ParamTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass

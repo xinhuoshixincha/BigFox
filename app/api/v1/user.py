@@ -277,6 +277,8 @@ def get_login_status():
         @apiUse ParamNeed
         @apiUse UserNotFound
         @apiUse ParamTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -309,6 +311,8 @@ def delete_user():
         @apiUse UserNotFound
         @apiUse ParamNeed
         @apiUse ParamTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -354,6 +358,8 @@ def update_user():
         @apiUse ParamValueError
         @apiUse ResourceUploadFailed
         @apiUse ResourceTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
         @apiErrorExample {json} 用户名已被使用
         {
             "result":false,
@@ -406,7 +412,7 @@ def judge_admin():
 
 
 @api.route('/v1/users/user/super-admin', methods=['GET'])
-def judge_admin():
+def judge_super_admin():
     """
         @api {GET} /api/v1/users/user/super-admin 判断用户是否是超级管理员
         @apiName 判断用户是否是超级管理员
@@ -603,14 +609,16 @@ def confirm_user_school():
             "data":{}
         }
 
-       @apiUse Errors
-       @apiUse ParamTypeError
-       @apiUse ParamValueError
-       @apiUse ParamNeed
-       @apiUse ResourceTypeError
-       @apiUse ResourceUploadFailed
-       @apiUse UserNotFound
-       @apiUse CompetenceError
+        @apiUse Errors
+        @apiUse ParamTypeError
+        @apiUse ParamValueError
+        @apiUse ParamNeed
+        @apiUse ResourceTypeError
+        @apiUse ResourceUploadFailed
+        @apiUse UserNotFound
+        @apiUse CompetenceError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
 
     pass
@@ -652,6 +660,8 @@ def follow():
         @apiUse ParamTypeError
         @apiUse CompetenceError
         @apiUse UserNotFound
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -684,6 +694,8 @@ def unfollow():
         @apiUse ParamTypeError
         @apiUse UserNotFound
         @apiUse CompetenceError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
         @apiErrorExample {json} 没有关注过该用户
         {
             "result":false,

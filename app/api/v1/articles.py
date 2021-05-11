@@ -178,6 +178,8 @@ def upload_article():
         @apiUse CompetenceError
         @apiUse ResourceUploadFailed
         @apiUse ResourceTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -217,6 +219,8 @@ def upload_image():
         @apiUse CompetenceError
         @apiUse ResourceUploadFailed
         @apiUse ResourceTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -249,6 +253,8 @@ def delete_article():
         @apiUse ParamTypeError
         @apiUse ParamNeed
         @apiUse ResourceNotFound
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -293,5 +299,7 @@ def update_article():
         @apiUse ParamNeed
         @apiUse ResourceUploadFailed
         @apiUse ResourceTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
