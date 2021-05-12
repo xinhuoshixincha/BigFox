@@ -28,6 +28,12 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_AS_ASCII = os.environ.get('JSON_AS_ASCII', False)
     AUTHORIZATION_EXPIRES_TIME = os.environ.get('AUTHORIZATION_EXPIRES_TIME', 60 * 60 * 3)
+    REDIS_URL = os.environ.get('REDIS_URL', "redis://:123456@localhost:6379/0")
+
+    REDIS_USER_FILED_ONE = 'email_code'
+    REDIS_USER_FILED_ONE_EXPIRED = 60 * 3
+    REDIS_USER_FILED_TWO = 'submit_token'
+    REDIS_USER_FILED_TWO_EXPIRED = 3
 
     @staticmethod
     def init_app(app):
