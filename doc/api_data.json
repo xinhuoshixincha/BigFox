@@ -2601,6 +2601,13 @@
             "optional": false,
             "field": "avatar",
             "description": "<p>头像</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "emailVerifyCode",
+            "description": "<p>邮箱验证码</p>"
           }
         ]
       }
@@ -6812,6 +6819,157 @@
         {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
+    "type": "POST",
+    "url": "/api/v1/email/email",
+    "title": "发送邮件",
+    "name": "发送邮件",
+    "group": "邮件",
+    "version": "1.0.0",
+    "description": "<p>传入邮箱地址，发送邮件验证码</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "allowedValues": [
+              "application/json"
+            ],
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>浏览器编码类型</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "emailAddress",
+            "description": "<p>邮箱地址</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "参数示例",
+          "content": "{\n    \"emailAddress\":\"邮箱地址\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "返回值示例",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        }
+      ],
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "allowedValues": [
+              "\"true -- 成功\"",
+              "\"false -- 失败\""
+            ],
+            "optional": false,
+            "field": "result",
+            "description": "<p>接口调用结果</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>http状态码</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "allowedValues": [
+              "\"接口调用成功时为空\"",
+              "\"接口调用失败时为错误信息\""
+            ],
+            "optional": false,
+            "field": "message",
+            "description": "<p>服务器返回的消息</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>服务器返回的数据</p>"
+          }
+        ]
+      }
+    },
+    "filename": "app/api/v1/email.py",
+    "groupTitle": "邮件",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "result",
+            "description": "<p>是否正确</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "code",
+            "description": "<p>错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "message",
+            "description": "<p>错误信息</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "data",
+            "description": "<p>返回数据</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "参数类型错误",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "缺少参数值",
+          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]

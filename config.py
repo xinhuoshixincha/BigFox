@@ -12,9 +12,9 @@ class Config:
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'true').lower() in ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', '3157684388@qq.com')
     # todo 这里应该只用环境变量， 不能使用显式赋值
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'inbrawhtarefdgjg')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASK_MAIL_SENDER = 'FLASKY Admin <3157684388@qq.com>'
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'nsqegchsfbvkdced')
+    FLASKY_MAIL_SUBJECT_PREFIX = '[BIG-FOX]'
+    FLASK_MAIL_SENDER = 'BIG-FOX DAHU <3157684388@qq.com>'
     # todo 这里应该用环境变量，暂时使用显式赋值
     FLASK_ADMIN = '3157684388@qq.com'
 

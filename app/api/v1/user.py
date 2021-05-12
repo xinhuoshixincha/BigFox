@@ -1,4 +1,6 @@
 from .. import api
+from ...email import send_email
+from flask import current_app
 
 
 @api.route('/v1/users/register', methods=['POST'])
@@ -19,6 +21,7 @@ def register():
         @apiParam {String='0-512位'} [description] 个人简介
         @apiParam {String='邮箱'} email 邮箱
         @apiParam {File} avatar 头像
+        @apiParam {String} emailVerifyCode 邮箱验证码
 
         @apiUse Success200
         @apiSuccess {String} data.username 刚注册用户的用户名
