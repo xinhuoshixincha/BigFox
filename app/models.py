@@ -2,6 +2,11 @@ from . import db
 from datetime import datetime
 # 利用此包对密码进行加密
 from werkzeug.security import generate_password_hash, check_password_hash
+# 利用此包生成token、校验token
+from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
+from flask import current_app
+import time
+from flask import jsonify
 
 
 class Permissions:
@@ -101,7 +106,13 @@ class Roles(db.Model):
         db.session.commit()
 
 
-# todo：用户表模型
+class Follows(db.Model):
+    __table_name__ = 'follows'
+    follower_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    create_time = db.Column(db.DateTime(), default=datetime.utcnow(), index=True)
+
+
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False, index=True)
@@ -109,11 +120,17 @@ class Users(db.Model):
     __password_hash = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(512), nullable=True)
     email = db.Column(db.String(64), unique=True, nullable=False, index=True)
-    registration_time = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    registration_time = db.Column(db.DateTime, default=datetime.utcfromtimestamp(time.time() + 60 * 60 * 8), index=True)
     avatar_url = db.Column(db.String(256), nullable=False, default="/static/avatar/default")
 
     likes = db.Column(db.Integer, default=0, index=True)
     fans = db.Column(db.Integer, default=0, index=True)
+    followed = db.relationship('Follows', foreign_keys=[Follows.follower_id],
+                               backref=db.backref('follower', lazy='joined'),
+                               lazy='dynamic', cascade='all, delete-orphan')
+    follower = db.relationship('Follows', foreign_keys=[Follows.followed_id],
+                               backref=db.backref('followed', lazy='joined'),
+                               lazy='dynamic', cascade='all, delete-orphan')
 
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
@@ -134,13 +151,15 @@ class Users(db.Model):
     # 认证方式 0代表学校邮箱认证，1代表提交学信网信息认证
     confirm_type = db.Column(db.Integer, default=0, nullable=False)
 
+    videos = db.relationship("Videos", backref='user', lazy='dynamic')
+
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
         # 如果没有传入身份，则将身份设置为roles表中
         if self.role_id is None:
             self.role_id = Roles.query.filter_by(default=True).first().id
-        # self.fans_number = self.follower.count()
-        # self.followed_number = self.followed.count()
+        self.fans_number = self.follower.count()
+        self.followed_number = self.followed.count()
 
     def __repr__(self):
         return "<user %r>" % self.username
@@ -196,13 +215,74 @@ class Users(db.Model):
         """
         return self.can(Permissions.MODIFY_ADMIN)
 
+    def is_following(self, user):
+        """
+        当前用户是否关注了user
+        :param user:要检查的用户
+        :return:当前用户是否关注了用户user
+        """
+        if user is None:
+            return False
+        return self.followed.filter_by(followed_id=user.id).first() is not None
 
+    def is_followed(self, user):
+        """
+        检查是否被user关注(粉丝列表中是否有user)
+        :param user: 要检查的用户
+        :return: 当前用户是否被user关注
+        """
+        if user is None:
+            return False
+        return self.follower.filter_by(follower_id=user.id).first() is not None
 
-# todo：用户间关注与被关注表
+    def follow(self, user):
+        """
+        关注用户
+        :param user:要关注的用户
+        """
+        if not self.is_following(user):
+            f = Follows(follower_id=self.id, followed_id=user.id, create_time=datetime.utcnow())
+            db.session.add(f)
+            db.session.commit()
+            self.likes += 1
+            user.fans += 1
+
+    def unfollow(self, user):
+        """
+        取消关注用户
+        :param user:要取关的用户
+        """
+        if self.is_following(user):
+            f = self.followed.filter_by(followed_id=user.id).first()
+            if f:
+                db.session.delete(f)
+                db.session.commit()
+                self.likes -= 1
+                user.fans -= 1
+
+    def get_authorization(self):
+        # print(current_app.config['SECRET_KEY'])
+        # print(current_app.config['AUTHORIZATION_EXPIRES_TIME'])
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'],
+                                            expires_in=current_app.config['AUTHORIZATION_EXPIRES_TIME'])
+        token = s.dumps({"userId": self.id}).decode('ascii')
+        return "BF " + token
 
 
 # todo：视频表模型
+class Videos(db.Model):
+    __tablename__ = 'videos'
+    id = db.Column(db.Integer, autoincrement=True, nullable=False, index=True, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    introduction = db.Column(db.String(512), nullable=True, default="这个视频没有介绍呢")
+    image_url = db.Column(db.String, unique=True, nullable=False)
+    video_url = db.Column(db.String, unique=True, nullable=False)
+    likes = db.Column(db.Integer, index=True, default=0, nullable=False)
+    views = db.Column(db.Integer, index=True, default=0, nullable=False)
+    releaseTime = db.Column(db.DateTime, index=True, default=datetime.utcfromtimestamp(time.time() + 60 * 60 * 8),
+                            nullable=False)
 
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
 # todo：文章表
 

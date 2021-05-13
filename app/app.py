@@ -18,6 +18,28 @@
     }
 """
 """
+    @apiDefine LoginExpired
+    @apiErrorExample {json} 登录过期
+    {
+        "result":false,
+        "code":401,
+        "message":"登录过期",
+        "header":{},
+        "data":{}
+    }
+"""
+"""
+    @apiDefine AuthorizationError
+    @apiErrorExample {json} 用户认证令牌错误
+    {
+        "result":false,
+        "code":401,
+        "message":"用户认证令牌错误",
+        "header":{},
+        "data":{}
+    }
+"""
+"""
     @apiDefine ParamValueError
     @apiErrorExample {json} 参数值错误
     {
@@ -50,42 +72,6 @@
         "header":{},
         "data":{}
     }
-"""
-
-"""
-    @apiDefine Success200
-    @apiSuccess {Boolean="true -- 成功","false -- 失败"} result 接口调用结果
-    @apiSuccess {Number} code http状态码
-    @apiSuccess {String="接口调用成功时为空","接口调用失败时为错误信息"} message 服务器返回的消息
-    @apiSuccess {Object} header 需要客户端保存的http请求头
-    @apiSuccess {Object} data 服务器返回的数据
-"""
-
-"""
-    @apiDefine Success204
-    @apiSuccess(Success 204) {Boolean="true -- 成功","false -- 失败"} result 接口调用结果
-    @apiSuccess(Success 204) {Number} code http状态码
-    @apiSuccess(Success 204) {String="接口调用成功时为空","接口调用失败时为错误信息"} message 服务器返回的消息
-    @apiSuccess(Success 204) {Object} header 需要客户端保存的http请求头
-    @apiSuccess(Success 204) {Object} data 服务器返回的数据
-    
-    @apiSuccessExample {json} 返回值示例
-    {
-        "result":true,
-        "code":204,
-        "message":"",
-        "header":{},
-        "data":{}
-    }
-"""
-
-"""
-    @apiDefine Success201
-    @apiSuccess(Success 201) {Boolean="true -- 成功","false -- 失败"} result 接口调用结果
-    @apiSuccess(Success 201) {Number} code http状态码
-    @apiSuccess(Success 201) {String="接口调用成功时为空","接口调用失败时为错误信息"} message 服务器返回的消息
-    @apiSuccess(Success 201) {Object} header 需要客户端保存的http请求头
-    @apiSuccess(Success 201) {Object} data 服务器返回的数据
 """
 
 """
@@ -134,4 +120,40 @@
         "header":{},
         "data":{}
     }
+"""
+
+"""
+    @apiDefine Success200
+    @apiSuccess {Boolean="true -- 成功","false -- 失败"} result 接口调用结果
+    @apiSuccess {Number} code http状态码
+    @apiSuccess {String="接口调用成功时为空","接口调用失败时为错误信息"} message 服务器返回的消息
+    @apiSuccess {Object} header 需要客户端保存的http请求头
+    @apiSuccess {Object} data 服务器返回的数据
+"""
+
+"""
+    @apiDefine Success204
+    @apiSuccess(Success 204) {Boolean="true -- 成功","false -- 失败"} result 接口调用结果
+    @apiSuccess(Success 204) {Number} code http状态码
+    @apiSuccess(Success 204) {String="接口调用成功时为空","接口调用失败时为错误信息"} message 服务器返回的消息
+    @apiSuccess(Success 204) {Object} header 需要客户端保存的http请求头
+    @apiSuccess(Success 204) {Object} data 服务器返回的数据
+    
+    @apiSuccessExample {json} 返回值示例
+    {
+        "result":true,
+        "code":204,
+        "message":"",
+        "header":{},
+        "data":{}
+    }
+"""
+
+"""
+    @apiDefine Success201
+    @apiSuccess(Success 201) {Boolean="true -- 成功","false -- 失败"} result 接口调用结果
+    @apiSuccess(Success 201) {Number} code http状态码
+    @apiSuccess(Success 201) {String="接口调用成功时为空","接口调用失败时为错误信息"} message 服务器返回的消息
+    @apiSuccess(Success 201) {Object} header 需要客户端保存的http请求头
+    @apiSuccess(Success 201) {Object} data 服务器返回的数据
 """

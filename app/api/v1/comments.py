@@ -166,6 +166,8 @@ def upload_comment():
         @apiUse ResourceNotFound
         @apiUse ParamValueError
         @apiUse ParamNeed
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -197,6 +199,8 @@ def delete_comments():
         @apiUse ResourceNotFound
         @apiUse ParamNeed
         @apiUse ParamTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
 """
     pass
 
@@ -366,6 +370,8 @@ def upload_article_comment():
         @apiUse ResourceNotFound
         @apiUse ParamTypeError
         @apiUse ParamNeed
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
 
@@ -397,5 +403,7 @@ def delete_article_comments():
         @apiUse ResourceNotFound
         @apiUse ParamNeed
         @apiUse ParamTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
 """
     pass

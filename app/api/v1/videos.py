@@ -1,4 +1,11 @@
+import os
 from .. import api
+from flask import jsonify, request
+from ...userAuthorization import auth
+from ...uploadFile import upload_file
+from ....config import Config
+from ...models import Videos
+from ... import db
 
 
 @api.route('/v1/videos/videos', methods=["GET"])
@@ -131,6 +138,7 @@ def get_video():
 
 
 @api.route('/v1/videos/video', methods=["POST"])
+@auth.login_required
 def upload_video():
     """
         @api {POST} /api/v1/videos/video 上传视频
@@ -143,6 +151,7 @@ def upload_video():
         @apiHeader {String="multipart/form-data","application/x-www-form-urlencoded"} Content-Type 浏览器编码类型
         @apiHeader {String} Authorization 用户认证令牌
 
+        @apiParam {Number} userId 用户编号
         @apiParam {String{1到64}} name 视频名称
         @apiParam {String{0到512}} [introduction] 视频简介
         @apiParam {File} image 视频封面
@@ -168,8 +177,55 @@ def upload_video():
         @apiUse ParamNeed
         @apiUse ResourceTypeError
         @apiUse ResourceUploadFailed
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
+        @apiUse UserNotFound
     """
-    pass
+    data = request.form
+    files = request.files
+
+    name = data.get("name")
+    introduction = data.get("introduction")
+    author_id = int(data.get("userId"))
+    img = files.get("image")
+    video = files.get("video")
+
+    # 缺少参数值
+    if name is None or img is None or video is None or author_id is None:
+        return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={})
+    # 参数类型错误
+    if type(name) != str or type(author_id) != int:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={})
+    if introduction is not None:
+        if type(introduction) != str:
+            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={})
+        if introduction.__len__() < 0 or introduction.__len__() > 512:
+            return jsonify(result=False, code=400, message="参数值错误!", header={}, data={})
+    # 参数值错误
+    if name.__len__() < 1 or name.__len__() > 64:
+        return jsonify(result=False, code=400, message="参数值错误!", header={}, data={})
+
+    img_response = upload_file(img, "videoImg", Config.IMAGE_ALLOWED_TYPE)
+    if img_response.get('result') is not None:
+        return jsonify(result=img_response['result'], code=img_response['code'], message=img_response['message'],
+                       header=img_response['header'], data=img_response['data']), img_response['code']
+
+    video_response = upload_file(video, "videos", Config.VIDEO_ALLOWED_TYPE)
+    if video_response.get('result') is not None:
+        os.remove(img_response.get('path'))
+        return jsonify(result=video_response['result'], code=video_response['code'], message=video_response['message'],
+                       header=video_response['header'], data=video_response['data']), video_response['code']
+
+    video = Videos()
+    video.name = name
+    if introduction is not None:
+        video.introduction = introduction
+    video.image_url = img_response.get("url")
+    video.video_url = video_response.get("url")
+    video.author_id = author_id
+    db.session.add(video)
+    db.session.commit()
+    return jsonify(result=True, code=200, message="", header={}, data={}), 200
 
 
 @api.route('/v1/videos/video', methods=["DELETE"])
@@ -199,5 +255,7 @@ def delete_video():
         @apiUse ResourceNotFound
         @apiUse ParamNeed
         @apiUse ParamTypeError
+        @apiUse LoginExpired
+        @apiUse AuthorizationError
     """
     pass
