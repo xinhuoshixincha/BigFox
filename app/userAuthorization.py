@@ -67,13 +67,20 @@ def verify_token(token):
     try:
         print(token)
         token_data = s.loads(token)
-        data = request.get_json()
-        print(data)
-        print(token_data)
-        token_uid = token_data['userId']
-        uid = data.get('userId')
+        if request.get_json() is not None:
+            data = request.get_json()
+        elif request.form:
+            data = request.form
+        else:
+            return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={}), 400
+        token_uid = int(token_data['userId'])
+        uid = int(data.get('userId'))
+        print(int(token_uid))
+        print(int(uid))
+
         # todo 这里加一个管理员认证
         if token_uid != uid:
+            print("HI!-------------------------")
             return "CompetenceError"
     except SignatureExpired:
         return "SignatureExpired"

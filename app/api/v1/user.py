@@ -1,6 +1,16 @@
 from .. import api
 from ...email import send_email
-from flask import current_app
+from flask import request, jsonify
+import filetype
+import os
+from ....config import Config, basedir, apiBasedir
+import time
+from ...models import Users
+from ... import redis_client
+import chardet
+from ...email import validate_email
+from ... import db
+from ...uploadFile import upload_file
 
 
 @api.route('/v1/users/register', methods=['POST'])
@@ -24,7 +34,7 @@ def register():
         @apiParam {String} emailVerifyCode 邮箱验证码
 
         @apiUse Success200
-        @apiSuccess {String} data.username 刚注册用户的用户名
+        @apiSuccess {String} data.email 刚注册用户的邮箱
         @apiSuccessExample {json} 返回值示例
         {
             "result":true,
@@ -32,7 +42,7 @@ def register():
             "message":"",
             "header":{},
             "data":{
-                "username":"user1"
+                "email":"4546@qq.com"
             }
         }
 
@@ -43,14 +53,6 @@ def register():
         @apiUse ParamValueError
         @apiUse ResourceUploadFailed
         @apiUse ResourceTypeError
-        @apiErrorExample {json} 用户名已被使用
-        {
-            "result":false,
-            "code":403,
-            "message":"用户名已被使用",
-            "header":{},
-            "data":{}
-        }
         @apiErrorExample {json} 邮箱已被使用
         {
             "result":false,
@@ -67,8 +69,69 @@ def register():
             "header":{},
             "data":{}
         }
+        @apiErrorExample {json} 邮箱验证码错误
+        {
+            "result": false,
+            "code": 403,
+            "message":"邮箱验证码错误",
+            "header":{},
+            "data":{}
+        }
     """
-    pass
+    all_form_data = request.form
+    username = all_form_data.get("username")
+    password = all_form_data.get("password")
+    description = all_form_data.get("description")
+    email = all_form_data.get("email")
+    avatar_dict = request.files.to_dict()
+    email_verify_code = all_form_data.get("emailVerifyCode")
+    path = None
+    avatar_response = None
+
+    # 缺少参数值
+    if username is None or password is None or email is None or email_verify_code is None:
+        return jsonify(result=False, code=400, message='缺少参数值!', header={}, data={}), 400
+    # 参数值类型错误
+    if type(username) != str or type(password) != str or type(email) != str or type(email_verify_code) != str:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    if description is not None:
+        if type(description) != str:
+            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    if (username.__len__() < 1 or username.__len__() > 64) or (password.__len__() < 6 or password.__len__() > 18):
+        return jsonify(result=False, code=400, message="参数值错误!", header={}, data={}), 400
+    # 邮箱已被使用
+    if Users.query.filter_by(email=email).first() is not None:
+        return jsonify(result=False, code=403, message='邮箱已被使用', header={}, data={}), 403
+    # 邮箱验证码认证失败
+    redis_email_code_bin = redis_client.get(email + Config.REDIS_USER_FILED_ONE)
+    if redis_email_code_bin is not None:
+        redis_email_code = str(redis_email_code_bin, encoding=chardet.detect(redis_email_code_bin)["encoding"])
+        if redis_email_code != email_verify_code:
+            return jsonify(result=False, code=403, message="邮箱验证码错误", header={}, data={}), 403
+    else:
+        return jsonify(result=False, code=403, message="邮箱验证码错误", header={}, data={}), 403
+    # 邮箱格式错误
+    if not validate_email(email):
+        return jsonify(result=False, code=403, message="邮箱格式不正确", header={}, data={}), 403
+    # 上传头像文件
+    for file_name in avatar_dict:
+        # 获得头像文件
+        avatar = avatar_dict[file_name]
+        avatar_response = upload_file(avatar, "avatar", Config.IMAGE_ALLOWED_TYPE)
+        if avatar_response.get('result') is not None:
+            return jsonify(result=avatar_response['result'], code=avatar_response['code'],
+                           message=avatar_response['message'], header=avatar_response['header'],
+                           data=avatar_response['data'])
+
+    user = Users()
+    user.username = username
+    user.password = password
+    user.description = description
+    user.email = email
+    user.avatar_url = avatar_response.get("url")
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(result=True, code=200, message="", header={}, data={"email": email}), 200
 
 
 @api.route('/v1/users/login', methods=['POST'])
@@ -107,6 +170,7 @@ def login():
         @apiUse Errors
         @apiUse ParamNeed
         @apiUse ParamTypeError
+        @apiUse UserNotFound
 
         @apiErrorExample {json} 账号或密码错误
         {
@@ -117,8 +181,34 @@ def login():
             "data":{}
         }
     """
+    data = request.get_json()
+    if data is not None:
+        email = data.get("email")
+        password = data.get("password")
+    else:
+        return jsonify(result=False, code=403, message="请传入正确的json格式", header={}, data={})
+    user = None
 
-    pass
+    # 判断是否缺少参数值
+    if email is None or password is None:
+        return jsonify(result=False, code=400, message="缺少参数值", header={}, data={})
+    # 判断类型错误
+    if type(email) is not str or type(password) is not str:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={})
+    # 判断是否是邮箱格式
+    if not validate_email(email):
+        return jsonify(result=False, code=403, message="邮箱格式错误", header={}, data={})
+
+    # 判断邮箱对应的用户是否存在
+    user = Users.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify(result=False, code=404, message="用户未找到", header={}, data={})
+    # 判断邮箱密码是否匹配
+    if not user.verify_password(password):
+        return jsonify(result=False, code=403, message="账号或密码错误", header={}, data={})
+
+    token = user.get_authorization()
+    return jsonify(result=True, code=200, message="", header={"Authorization": token}, data={})
 
 
 @api.route('/v1/users/user', methods=['GET'])

@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # 利用此包生成token、校验token
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 from flask import current_app
+import time
 from flask import jsonify
 
 
@@ -112,7 +113,6 @@ class Follows(db.Model):
     create_time = db.Column(db.DateTime(), default=datetime.utcnow(), index=True)
 
 
-# todo：用户表模型
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False, index=True)
@@ -120,7 +120,7 @@ class Users(db.Model):
     __password_hash = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(512), nullable=True)
     email = db.Column(db.String(64), unique=True, nullable=False, index=True)
-    registration_time = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    registration_time = db.Column(db.DateTime, default=datetime.utcfromtimestamp(time.time() + 60 * 60 * 8), index=True)
     avatar_url = db.Column(db.String(256), nullable=False, default="/static/avatar/default")
 
     likes = db.Column(db.Integer, default=0, index=True)
@@ -150,6 +150,8 @@ class Users(db.Model):
     school_confirmed = db.Column(db.Boolean, default=False)
     # 认证方式 0代表学校邮箱认证，1代表提交学信网信息认证
     confirm_type = db.Column(db.Integer, default=0, nullable=False)
+
+    videos = db.relationship("Videos", backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
@@ -259,14 +261,28 @@ class Users(db.Model):
                 user.fans -= 1
 
     def get_authorization(self):
-        print(current_app.config['SECRET_KEY'])
-        print(current_app.config['AUTHORIZATION_EXPIRES_TIME'])
+        # print(current_app.config['SECRET_KEY'])
+        # print(current_app.config['AUTHORIZATION_EXPIRES_TIME'])
         s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'],
                                             expires_in=current_app.config['AUTHORIZATION_EXPIRES_TIME'])
         token = s.dumps({"userId": self.id}).decode('ascii')
-        return jsonify(Authorization="BF " + token)
-# todo：视频表模型
+        return "BF " + token
 
+
+# todo：视频表模型
+class Videos(db.Model):
+    __tablename__ = 'videos'
+    id = db.Column(db.Integer, autoincrement=True, nullable=False, index=True, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    introduction = db.Column(db.String(512), nullable=True, default="这个视频没有介绍呢")
+    image_url = db.Column(db.String, unique=True, nullable=False)
+    video_url = db.Column(db.String, unique=True, nullable=False)
+    likes = db.Column(db.Integer, index=True, default=0, nullable=False)
+    views = db.Column(db.Integer, index=True, default=0, nullable=False)
+    releaseTime = db.Column(db.DateTime, index=True, default=datetime.utcfromtimestamp(time.time() + 60 * 60 * 8),
+                            nullable=False)
+
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
 # todo：文章表
 

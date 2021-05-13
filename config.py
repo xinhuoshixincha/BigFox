@@ -1,6 +1,7 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+apiBasedir = basedir + '\\app'
 
 
 class Config:
@@ -28,12 +29,15 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_AS_ASCII = os.environ.get('JSON_AS_ASCII', False)
     AUTHORIZATION_EXPIRES_TIME = os.environ.get('AUTHORIZATION_EXPIRES_TIME', 60 * 60 * 3)
-    REDIS_URL = os.environ.get('REDIS_URL', "redis://:123456@localhost:6379/0")
+    REDIS_URL = os.environ.get('REDIS_URL', "redis://:@localhost:6379/0")
 
-    REDIS_USER_FILED_ONE = 'email_code'
+    REDIS_USER_FILED_ONE = '_email_code'
     REDIS_USER_FILED_ONE_EXPIRED = 60 * 3
-    REDIS_USER_FILED_TWO = 'submit_token'
+    REDIS_USER_FILED_TWO = '_submit_token'
     REDIS_USER_FILED_TWO_EXPIRED = 3
+
+    IMAGE_ALLOWED_TYPE = {'jpg', 'png', 'gif'}
+    VIDEO_ALLOWED_TYPE = {'mp4', 'm4v', 'webm', 'avi', 'flv'}
 
     @staticmethod
     def init_app(app):

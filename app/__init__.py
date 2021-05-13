@@ -1,4 +1,4 @@
-__all__ = ['models', 'mail', 'create_app', 'db', 'email']
+__all__ = ['models', 'mail', 'create_app', 'db']
 
 from flask import Flask
 from flask_mail import Mail

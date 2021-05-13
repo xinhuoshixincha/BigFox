@@ -2619,8 +2619,8 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "data.username",
-            "description": "<p>刚注册用户的用户名</p>"
+            "field": "data.email",
+            "description": "<p>刚注册用户的邮箱</p>"
           },
           {
             "group": "Success 200",
@@ -2670,18 +2670,13 @@ define({ "api": [
       "examples": [
         {
           "title": "返回值示例",
-          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{\n        \"username\":\"user1\"\n    }\n}",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{},\n    \"data\":{\n        \"email\":\"4546@qq.com\"\n    }\n}",
           "type": "json"
         }
       ]
     },
     "error": {
       "examples": [
-        {
-          "title": "用户名已被使用",
-          "content": "{\n    \"result\":false,\n    \"code\":403,\n    \"message\":\"用户名已被使用\",\n    \"header\":{},\n    \"data\":{}\n}",
-          "type": "json"
-        },
         {
           "title": "邮箱已被使用",
           "content": "{\n    \"result\":false,\n    \"code\":403,\n    \"message\":\"邮箱已被使用\",\n    \"header\":{},\n    \"data\":{}\n}",
@@ -2690,6 +2685,11 @@ define({ "api": [
         {
           "title": "邮箱格式不正确",
           "content": "{\n    \"result\":false,\n    \"code\":403,\n    \"message\":\"邮箱格式不正确\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "邮箱验证码错误",
+          "content": "{\n    \"result\": false,\n    \"code\": 403,\n    \"message\":\"邮箱验证码错误\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         },
         {
@@ -3129,6 +3129,11 @@ define({ "api": [
         {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户未找到",
+          "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
           "type": "json"
         }
       ],
@@ -4297,6 +4302,13 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>用户编号</p>"
+          },
+          {
+            "group": "Parameter",
             "type": "String",
             "size": "1到64",
             "optional": false,
@@ -4467,6 +4479,11 @@ define({ "api": [
         {
           "title": "用户认证令牌错误",
           "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"用户认证令牌错误\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
+        {
+          "title": "用户未找到",
+          "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
           "type": "json"
         }
       ]
@@ -6827,8 +6844,8 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/api/v1/email/email",
-    "title": "发送邮件",
-    "name": "发送邮件",
+    "title": "发送邮件验证码",
+    "name": "发送邮件验证码",
     "group": "邮件",
     "version": "1.0.0",
     "description": "<p>传入邮箱地址，发送邮件验证码</p>",
@@ -6924,7 +6941,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "app/api/v1/email.py",
+    "filename": "app/api/v1/mail.py",
     "groupTitle": "邮件",
     "error": {
       "fields": {
