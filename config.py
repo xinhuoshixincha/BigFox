@@ -39,6 +39,8 @@ class Config:
     IMAGE_ALLOWED_TYPE = {'jpg', 'png', 'gif'}
     VIDEO_ALLOWED_TYPE = {'mp4', 'm4v', 'webm', 'avi', 'flv'}
 
+    SEARCH_SIMILARITY = 0.45
+
     @staticmethod
     def init_app(app):
         pass

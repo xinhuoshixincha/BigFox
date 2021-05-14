@@ -4403,44 +4403,13 @@ define({ "api": [
         }
       ]
     },
-    "filename": "app/api/v1/videos.py",
-    "groupTitle": "视频",
     "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "result",
-            "description": "<p>是否正确</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "code",
-            "description": "<p>错误码</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "message",
-            "description": "<p>错误信息</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "header",
-            "description": "<p>需要客户端保存的http请求头</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "data",
-            "description": "<p>返回数据</p>"
-          }
-        ]
-      },
       "examples": [
+        {
+          "title": "视频名称已经存在",
+          "content": "{\n    \"result\":false,\n    \"code\":403,\n    \"message\":\"视频名称已经存在\",\n    \"header\":{},\n    \"data\":{}\n}",
+          "type": "json"
+        },
         {
           "title": "权限不足",
           "content": "{\n    \"result\":false,\n    \"code\":401,\n    \"message\":\"权限不足!\",\n    \"header\":{},\n    \"data\":{}\n}",
@@ -4486,8 +4455,44 @@ define({ "api": [
           "content": "{\n    \"result\":false,\n    \"code\":404,\n    \"message\":\"未找到此用户\",\n    \"header\":{},\n    \"data\":{}    \n}",
           "type": "json"
         }
-      ]
-    }
+      ],
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "result",
+            "description": "<p>是否正确</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "code",
+            "description": "<p>错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "message",
+            "description": "<p>错误信息</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "header",
+            "description": "<p>需要客户端保存的http请求头</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "data",
+            "description": "<p>返回数据</p>"
+          }
+        ]
+      }
+    },
+    "filename": "app/api/v1/videos.py",
+    "groupTitle": "视频"
   },
   {
     "type": "DELETE",
@@ -4945,7 +4950,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Boolean",
-            "optional": false,
+            "optional": true,
             "field": "isPagination",
             "defaultValue": "false",
             "description": "<p>是否分页</p>"
@@ -5150,18 +5155,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "缺少参数值",
-          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
-          "type": "json"
-        },
-        {
           "title": "参数类型错误",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
-          "type": "json"
-        },
-        {
-          "title": "参数值错误",
-          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数值错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
         }
       ]
