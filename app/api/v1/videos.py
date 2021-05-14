@@ -4,8 +4,10 @@ from flask import jsonify, request
 from ...userAuthorization import auth
 from ...uploadFile import upload_file
 from ....config import Config
-from ...models import Videos
+from ...models import Videos, Users
 from ... import db
+import Levenshtein
+import json
 
 
 @api.route('/v1/videos/videos', methods=["GET"])
@@ -23,7 +25,7 @@ def get_videos():
         @apiParam{String="likes -- 点赞数降序","views -- 观看量降序","releaseTime -- 发布时间降序","total -- 综合"}[order="likes"]
         用来指定视频的排序方式。
         @apiParam {String} [searchValue] 搜索内容
-        @apiParam {Boolean} isPagination=false 是否分页
+        @apiParam {Boolean} [isPagination=false] 是否分页
         @apiParam {Number{大于0}} [pageNumber=1] 页码
         @apiParam {Number{大于0}} [pageSize=10] 页面大小
         @apiParamExample {json} 参数示例
@@ -73,11 +75,87 @@ def get_videos():
         }
 
         @apiUse Errors
-        @apiUse ParamNeed
         @apiUse ParamTypeError
-        @apiUse ParamValueError
     """
-    pass
+    data = request.get_json()
+
+    order = data.get("order")
+    search_value = data.get("searchValue")
+    is_pagination = data.get("isPagination")
+    page_number = data.get("pageNumber")
+    page_size = data.get("pageSize")
+    video_filter = None
+
+    # 处理搜索
+    if search_value is not None:
+        if type(search_value) != str:
+            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+        # 匹配到的视频的名字的队列
+        match_video_name_list = list()
+        # 从数据库获取所有视频的名字
+        videos_name = Videos.query.with_entities(Videos.name).all()
+        for video_name in videos_name:
+            # 搜索内容和视频相似度
+            similarity = Levenshtein.jaro_winkler(search_value, video_name[0])
+            # print(video_name[0] + ':' + str(similarity))
+            # 如果相似度大于设定的值就将视频名字放到匹配队列中去
+            if similarity >= Config.SEARCH_SIMILARITY:
+                match_video_name_list.append(video_name[0])
+        video_filter = Videos.query.filter(Videos.name.in_(match_video_name_list))
+    else:
+        video_filter = Videos.query
+    # 处理排序
+    if order is None:
+        order = "likes"
+    else:
+        if type(order) != str:
+            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    if order == "likes":
+        video_filter = video_filter.order_by(Videos.likes.desc())
+    if order == "views":
+        video_filter = video_filter.order_by(Videos.views.desc())
+    if order == "releaseTime":
+        video_filter = video_filter.order_by(Videos.releaseTime.desc())
+
+    if is_pagination is None:
+        is_pagination = False
+    if type(is_pagination) != bool:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    if is_pagination:
+        # 设定页码
+        if page_size is None:
+            page_size = 10
+        if page_number is None:
+            page_number = 1
+        page_size = int(page_size)
+        page_number = int(page_number)
+        video_filter = video_filter.paginate(page_number, page_size, False).items
+        # print(video_filter)
+    else:
+        video_filter = video_filter.all()
+        # print(video_filter)
+
+    return_data = {
+        "videos": []
+    }
+
+    for v in video_filter:
+        author_name = Users.query.filter_by(id=v.author_id).with_entities(Users.username).first()[0]
+        video_dict = {
+            "id": v.id,
+            "name": v.name,
+            "authorId": v.author_id,
+            "authorName": author_name,
+            "introduction": v.introduction,
+            "likes": v.likes,
+            "views": v.views,
+            "releaseTime": str(v.releaseTime.strftime("%Y年%m月%d日 %H:%M")),
+            "imageUrl": v.image_url,
+            "videoUrl": v.video_url
+        }
+        return_data.get("videos").append(video_dict)
+        # print(return_data)
+    return jsonify(result=True, code=200, message="", header={}, data=return_data)
 
 
 @api.route('/v1/videos/video', methods=["GET"])
@@ -134,7 +212,35 @@ def get_video():
     @apiUse ParamNeed
     @apiUse ParamTypeError
     """
-    pass
+    data = request.get_json()
+    video_id = data.get("id")
+
+    # 缺少参数值
+    if video_id is None:
+        return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={}), 400
+    # 参数类型错误
+    if type(video_id) != int:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    # 资源未找到
+    video = Videos.query.filter_by(id=video_id).first()
+    if video is None:
+        return jsonify(result=False, code=404, message="资源未找到", header={}, data={}), 404
+    author_name = Users.query.filter_by(id=video.author_id).with_entities(Users.username).first()[0]
+    return_data = {
+        "id": video.id,
+        "name": video.name,
+        "authorId": video.author_id,
+        "authorName": author_name,
+        "introduction": video.introduction,
+        "likes": video.likes,
+        "views": video.views,
+        "releaseTime": str(video.releaseTime.strftime("%Y年%m月%d日 %H:%M")),
+        "imageUrl": video.image_url,
+        "videoUrl": video.video_url
+    }
+    print(return_data)
+    print(type(return_data))
+    return jsonify(result=True, code=200, message="", header={}, data=return_data), 200
 
 
 @api.route('/v1/videos/video', methods=["POST"])
@@ -180,6 +286,14 @@ def upload_video():
         @apiUse LoginExpired
         @apiUse AuthorizationError
         @apiUse UserNotFound
+        @apiErrorExample {json} 视频名称已经存在
+        {
+            "result":false,
+            "code":403,
+            "message":"视频名称已经存在",
+            "header":{},
+            "data":{}
+        }
     """
     data = request.form
     files = request.files
@@ -204,18 +318,23 @@ def upload_video():
     # 参数值错误
     if name.__len__() < 1 or name.__len__() > 64:
         return jsonify(result=False, code=400, message="参数值错误!", header={}, data={})
-
+    # 上传封面图片并判断图片文件类型是否正确
     img_response = upload_file(img, "videoImg", Config.IMAGE_ALLOWED_TYPE)
     if img_response.get('result') is not None:
         return jsonify(result=img_response['result'], code=img_response['code'], message=img_response['message'],
                        header=img_response['header'], data=img_response['data']), img_response['code']
-
+    # 上传视频并判断视频文件类型是否正确
     video_response = upload_file(video, "videos", Config.VIDEO_ALLOWED_TYPE)
     if video_response.get('result') is not None:
         os.remove(img_response.get('path'))
         return jsonify(result=video_response['result'], code=video_response['code'], message=video_response['message'],
                        header=video_response['header'], data=video_response['data']), video_response['code']
+    # 判断视频名字是否重复
+    verify_video = Videos.query.filter_by(name=name).first()
+    if verify_video is not None:
+        return jsonify(result=False, code=403, message="视频名称已经存在", header={}, data={})
 
+    # 上传视频信息到数据库
     video = Videos()
     video.name = name
     if introduction is not None:
@@ -225,7 +344,15 @@ def upload_video():
     video.author_id = author_id
     db.session.add(video)
     db.session.commit()
-    return jsonify(result=True, code=200, message="", header={}, data={}), 200
+
+    # # 在redis中存储一段临时数据用于防止表单重复提交
+    # user = Users.query.filter_by(id=author_id).first()
+    # body = name + str(img_response.get("file_bin")) + str(video_response.get("file_bin"))
+    # print(body.__len__())
+    # if user is not None:
+    #     redis_client.set(user.email+Config.REDIS_USER_FILED_TWO, body, Config.REDIS_USER_FILED_TWO_EXPIRED)
+    # redis_client.set()
+    return jsonify(result=True, code=200, message="", header={}, data={"videoId": video.id}), 200
 
 
 @api.route('/v1/videos/video', methods=["DELETE"])

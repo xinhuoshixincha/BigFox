@@ -36,4 +36,4 @@ def upload_file(file, path, file_type):
         os.remove(total_path)
         return {"result": False, "code": 400, "message": "缺少参数值!", "header": {}, "data": {}}
     file_local.close()
-    return {"path":total_path, "url":request.host_url + f'static/{path}/{total_name}'}
+    return {"path": total_path, "url": request.host_url + f'static/{path}/{total_name}', "file_bin": file_bin}
