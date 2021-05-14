@@ -238,8 +238,9 @@ def get_video():
         "imageUrl": video.image_url,
         "videoUrl": video.video_url
     }
-    print(return_data)
-    print(type(return_data))
+    video.views += 1
+    db.session.add(video)
+    db.session.commit()
     return jsonify(result=True, code=200, message="", header={}, data=return_data), 200
 
 
