@@ -12,16 +12,9 @@ class Config:
     MAIL_PORT = int(os.environ.get('MAIL_PORT', '465'))
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'true').lower() in ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', '3157684388@qq.com')
-    # todo 这里应该只用环境变量， 不能使用显式赋值
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'nsqegchsfbvkdced')
     FLASKY_MAIL_SUBJECT_PREFIX = '[BIG-FOX]'
-    FLASK_MAIL_SENDER = 'BIG-FOX DAHU <3157684388@qq.com>'
-    # todo 这里应该用环境变量，暂时使用显式赋值
-    FLASK_ADMIN = '3157684388@qq.com'
-
-    UPLOADED_AVATAR_DEST = basedir + '\\app\\static\\file\\avatar\\'
-    UPLOADED_FILES_DEST = basedir + '\\files\\toolFiles\\'
-    UPLOADED_PICTURES_DEST = basedir + '\\app\\static\\file\\pictures\\'
+    FLASK_MAIL_SENDER = 'BIG-FOX DAHU <'+MAIL_USERNAME+'>'
 
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("DEV_DATABASE_URL",
@@ -33,8 +26,6 @@ class Config:
 
     REDIS_USER_FILED_ONE = '_email_code'
     REDIS_USER_FILED_ONE_EXPIRED = 60 * 3
-    REDIS_USER_FILED_TWO = '_submit_token'
-    REDIS_USER_FILED_TWO_EXPIRED = 3
 
     IMAGE_ALLOWED_TYPE = {'jpg', 'png', 'gif'}
     VIDEO_ALLOWED_TYPE = {'mp4', 'm4v', 'webm', 'avi', 'flv'}
