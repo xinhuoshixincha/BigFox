@@ -18,8 +18,8 @@ from ...userAuthorization import auth
 @api.route('/v1/users/register', methods=['POST'])
 def register():
     """
-        @api {POST} /api/v1/users/register 注册用户
-        @apiName 注册用户
+        @api {POST} /api/v1/users/register 注册用户（已完成）
+        @apiName 注册用户（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -140,8 +140,8 @@ def register():
 @api.route('/v1/users/login', methods=['POST'])
 def login():
     """
-        @api {POST} /api/v1/users/login 登录
-        @apiName 登录
+        @api {POST} /api/v1/users/login 登录（已完成）
+        @apiName 登录（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -218,8 +218,8 @@ def login():
 @api.route('/v1/users/user', methods=['GET'])
 def get_user_info():
     """
-        @api {GET} /api/v1/users/user 获取用户信息
-        @apiName 获取用户信息
+        @api {GET} /api/v1/users/user 获取用户信息（已完成）
+        @apiName 获取用户信息（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -358,12 +358,13 @@ def get_users():
     pass
 
 
+# over
 @api.route('/v1/users/login', methods=['GET'])
 @auth.login_required
 def get_login_status():
     """
-        @api {GET} /api/v1/users/login 获取用户的登录状态
-        @apiName 获取用户的登录状态
+        @api {GET} /api/v1/users/login 获取用户的登录状态（已完成）
+        @apiName 获取用户的登录状态（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -398,7 +399,6 @@ def get_login_status():
         @apiUse LoginExpired
         @apiUse AuthorizationError
     """
-
     return jsonify(result=True, code=200, message="", header={}, data={"isLogin": True}), 200
 
 

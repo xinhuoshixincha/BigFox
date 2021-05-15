@@ -9,8 +9,8 @@ import random
 @api.route("/v1/email/email", methods=["POST"])
 def send_mail_code():
     """
-        @api {POST} /api/v1/email/email 发送邮件验证码
-        @apiName 发送邮件验证码
+        @api {POST} /api/v1/email/email 发送邮件验证码（已完成）
+        @apiName 发送邮件验证码（已完成）
         @apiGroup 邮件
         @apiVersion 1.0.0
         @apiDescription
