@@ -66,21 +66,25 @@ def verify_token(token):
     s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
     try:
         print(token)
+        print(request.form.to_dict())
         token_data = s.loads(token)
+        data = None
         if request.get_json() is not None:
+            print(1)
             data = request.get_json()
-        elif request.form:
+        elif request.form.get("userId") is not None:
+            print(2)
             data = request.form
+        elif request.args is not None:
+            print(3)
+            data = request.args
         else:
             return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={}), 400
         token_uid = int(token_data['userId'])
         uid = int(data.get('userId'))
-        print(int(token_uid))
-        print(int(uid))
 
         # todo 这里加一个管理员认证
         if token_uid != uid:
-            print("HI!-------------------------")
             return "CompetenceError"
     except SignatureExpired:
         return "SignatureExpired"

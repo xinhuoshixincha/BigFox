@@ -75,9 +75,8 @@ def get_videos():
         }
 
         @apiUse Errors
-        @apiUse ParamTypeError
     """
-    data = request.get_json()
+    data = request.args
 
     order = data.get("order")
     search_value = data.get("searchValue")
@@ -88,8 +87,6 @@ def get_videos():
 
     # 处理搜索
     if search_value is not None:
-        if type(search_value) != str:
-            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
         # 匹配到的视频的名字的队列
         match_video_name_list = list()
         # 从数据库获取所有视频的名字
@@ -107,9 +104,6 @@ def get_videos():
     # 处理排序
     if order is None:
         order = "likes"
-    else:
-        if type(order) != str:
-            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
     if order == "likes":
         video_filter = video_filter.order_by(Videos.likes.desc())
     if order == "views":
@@ -119,16 +113,21 @@ def get_videos():
 
     if is_pagination is None:
         is_pagination = False
-    if type(is_pagination) != bool:
-        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    if is_pagination == 'true':
+        is_pagination = True
+    elif is_pagination == 'false':
+        is_pagination = False
     if is_pagination:
         # 设定页码
         if page_size is None:
             page_size = 10
         if page_number is None:
             page_number = 1
-        page_size = int(page_size)
-        page_number = int(page_number)
+        try:
+            page_size = int(page_size)
+            page_number = int(page_number)
+        except ValueError:
+            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
         video_filter = video_filter.paginate(page_number, page_size, False).items
         # print(video_filter)
     else:
@@ -155,7 +154,7 @@ def get_videos():
         }
         return_data.get("videos").append(video_dict)
         # print(return_data)
-    return jsonify(result=True, code=200, message="", header={}, data=return_data)
+    return jsonify(result=True, code=200, message="", header={}, data=return_data), 200
 
 
 @api.route('/v1/videos/video', methods=["GET"])
@@ -210,17 +209,17 @@ def get_video():
     @apiUse Errors
     @apiUse ResourceNotFound
     @apiUse ParamNeed
-    @apiUse ParamTypeError
     """
-    data = request.get_json()
+    data = request.args
     video_id = data.get("id")
 
     # 缺少参数值
     if video_id is None:
         return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={}), 400
-    # 参数类型错误
-    if type(video_id) != int:
-        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    try:
+        video_id = int(video_id)
+    except ValueError:
+        return jsonify(result=False, code=400, message="参数类型错误", header={}, data={}), 400
     # 资源未找到
     video = Videos.query.filter_by(id=video_id).first()
     if video is None:
@@ -301,24 +300,32 @@ def upload_video():
 
     name = data.get("name")
     introduction = data.get("introduction")
-    author_id = int(data.get("userId"))
+    author_id = data.get("userId")
     img = files.get("image")
     video = files.get("video")
 
     # 缺少参数值
     if name is None or img is None or video is None or author_id is None:
-        return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={})
+        return jsonify(result=False, code=400, message="缺少参数值!", header={}, data={}), 400
     # 参数类型错误
-    if type(name) != str or type(author_id) != int:
-        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={})
+    if type(name) != str:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
+    try:
+        author_id = int(author_id)
+    except ValueError:
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
     if introduction is not None:
         if type(introduction) != str:
-            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={})
+            return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
         if introduction.__len__() < 0 or introduction.__len__() > 512:
-            return jsonify(result=False, code=400, message="参数值错误!", header={}, data={})
+            return jsonify(result=False, code=400, message="参数值错误!", header={}, data={}), 400
     # 参数值错误
     if name.__len__() < 1 or name.__len__() > 64:
-        return jsonify(result=False, code=400, message="参数值错误!", header={}, data={})
+        return jsonify(result=False, code=400, message="参数值错误!", header={}, data={}), 400
+    # 判断视频名字是否重复
+    verify_video = Videos.query.filter_by(name=name).first()
+    if verify_video is not None:
+        return jsonify(result=False, code=403, message="视频名称已经存在", header={}, data={}), 403
     # 上传封面图片并判断图片文件类型是否正确
     img_response = upload_file(img, "videoImg", Config.IMAGE_ALLOWED_TYPE)
     if img_response.get('result') is not None:
@@ -330,10 +337,6 @@ def upload_video():
         os.remove(img_response.get('path'))
         return jsonify(result=video_response['result'], code=video_response['code'], message=video_response['message'],
                        header=video_response['header'], data=video_response['data']), video_response['code']
-    # 判断视频名字是否重复
-    verify_video = Videos.query.filter_by(name=name).first()
-    if verify_video is not None:
-        return jsonify(result=False, code=403, message="视频名称已经存在", header={}, data={})
 
     # 上传视频信息到数据库
     video = Videos()
@@ -346,13 +349,6 @@ def upload_video():
     db.session.add(video)
     db.session.commit()
 
-    # # 在redis中存储一段临时数据用于防止表单重复提交
-    # user = Users.query.filter_by(id=author_id).first()
-    # body = name + str(img_response.get("file_bin")) + str(video_response.get("file_bin"))
-    # print(body.__len__())
-    # if user is not None:
-    #     redis_client.set(user.email+Config.REDIS_USER_FILED_TWO, body, Config.REDIS_USER_FILED_TWO_EXPIRED)
-    # redis_client.set()
     return jsonify(result=True, code=200, message="", header={}, data={"videoId": video.id}), 200
 
 

@@ -11,8 +11,10 @@ import chardet
 from ...email import validate_email
 from ... import db
 from ...uploadFile import upload_file
+from ...userAuthorization import auth
 
 
+# over
 @api.route('/v1/users/register', methods=['POST'])
 def register():
     """
@@ -121,7 +123,7 @@ def register():
         if avatar_response.get('result') is not None:
             return jsonify(result=avatar_response['result'], code=avatar_response['code'],
                            message=avatar_response['message'], header=avatar_response['header'],
-                           data=avatar_response['data'])
+                           data=avatar_response['data']), avatar_response['code']
 
     user = Users()
     user.username = username
@@ -134,6 +136,7 @@ def register():
     return jsonify(result=True, code=200, message="", header={}, data={"email": email}), 200
 
 
+# over
 @api.route('/v1/users/login', methods=['POST'])
 def login():
     """
@@ -186,31 +189,32 @@ def login():
         email = data.get("email")
         password = data.get("password")
     else:
-        return jsonify(result=False, code=403, message="请传入正确的json格式", header={}, data={})
+        return jsonify(result=False, code=403, message="请传入正确的json格式", header={}, data={}), 403
     user = None
 
     # 判断是否缺少参数值
     if email is None or password is None:
-        return jsonify(result=False, code=400, message="缺少参数值", header={}, data={})
+        return jsonify(result=False, code=400, message="缺少参数值", header={}, data={}), 400
     # 判断类型错误
     if type(email) is not str or type(password) is not str:
-        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={})
+        return jsonify(result=False, code=400, message="参数类型错误!", header={}, data={}), 400
     # 判断是否是邮箱格式
     if not validate_email(email):
-        return jsonify(result=False, code=403, message="邮箱格式错误", header={}, data={})
+        return jsonify(result=False, code=403, message="邮箱格式错误", header={}, data={}), 403
 
     # 判断邮箱对应的用户是否存在
     user = Users.query.filter_by(email=email).first()
     if user is None:
-        return jsonify(result=False, code=404, message="用户未找到", header={}, data={})
+        return jsonify(result=False, code=404, message="用户未找到", header={}, data={}), 404
     # 判断邮箱密码是否匹配
     if not user.verify_password(password):
-        return jsonify(result=False, code=403, message="账号或密码错误", header={}, data={})
+        return jsonify(result=False, code=403, message="账号或密码错误", header={}, data={}), 403
 
     token = user.get_authorization()
-    return jsonify(result=True, code=200, message="", header={"Authorization": token}, data={})
+    return jsonify(result=True, code=200, message="", header={"Authorization": token}, data={}), 200
 
 
+# over
 @api.route('/v1/users/user', methods=['GET'])
 def get_user_info():
     """
@@ -255,7 +259,27 @@ def get_user_info():
         @apiUse ParamNeed
         @apiUse ParamTypeError
     """
-    pass
+    data = request.args
+    user_id = data.get("userId")
+
+    if user_id is None:
+        return jsonify(result=False, code=400, message="缺少参数值", header={}, data={}), 400
+    if type(user_id) != int:
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return jsonify(result=False, code=400, message="参数值类型错误", header={}, data={}), 400
+    user = Users.query.filter_by(id=user_id).first()
+    if user is None:
+        return jsonify(result=False, code=404, message="未找到此用户!", header={}, data={}), 404
+    return_data = {
+        "username": user.username,
+        "description": user.description,
+        "avatarUrl": user.avatar_url,
+        "attentionNumber": user.likes,
+        "fansNumber": user.fans
+    }
+    return jsonify(result=True, code=200, message="", header={}, data=return_data), 200
 
 
 @api.route('/v1/users/users', methods=['GET'])
@@ -335,6 +359,7 @@ def get_users():
 
 
 @api.route('/v1/users/login', methods=['GET'])
+@auth.login_required
 def get_login_status():
     """
         @api {GET} /api/v1/users/login 获取用户的登录状态
@@ -373,7 +398,8 @@ def get_login_status():
         @apiUse LoginExpired
         @apiUse AuthorizationError
     """
-    pass
+
+    return jsonify(result=True, code=200, message="", header={}, data={"isLogin": True}), 200
 
 
 @api.route('/v1/users/user', methods=['DELETE'])
