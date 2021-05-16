@@ -9,8 +9,8 @@ import random
 @api.route("/v1/email/email", methods=["POST"])
 def send_mail_code():
     """
-        @api {POST} /api/v1/email/email 发送邮件验证码
-        @apiName 发送邮件验证码
+        @api {POST} /api/v1/email/email 发送邮件验证码（已完成）
+        @apiName 发送邮件验证码（已完成）
         @apiGroup 邮件
         @apiVersion 1.0.0
         @apiDescription
@@ -40,6 +40,8 @@ def send_mail_code():
         @apiUse ParamNeed
     """
     data = request.get_json()
+    if data is None:
+        return jsonify(result=False, code=400, message="缺少参数！", header={}, data={}), 400
     email = data.get("emailAddress")
     email_code = str(random.randint(10000, 99999))
     send_email(email, 'BIGFOX验证码', "验证码："+email_code)

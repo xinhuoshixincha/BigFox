@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 from flask import current_app
 import time
-from flask import jsonify
+from flask import jsonify, request
 
 
 class Permissions:
@@ -122,6 +122,8 @@ class Users(db.Model):
     email = db.Column(db.String(64), unique=True, nullable=False, index=True)
     registration_time = db.Column(db.DateTime, default=datetime.utcfromtimestamp(time.time() + 60 * 60 * 8), index=True)
     avatar_url = db.Column(db.String(256), nullable=False, default="/static/avatar/default")
+    sex = db.Column(db.String(5), nullable=True, default="男")
+    birthday = db.Column(db.DateTime)
 
     likes = db.Column(db.Integer, default=0, index=True)
     fans = db.Column(db.Integer, default=0, index=True)

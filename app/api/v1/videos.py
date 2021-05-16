@@ -13,8 +13,8 @@ import json
 @api.route('/v1/videos/videos', methods=["GET"])
 def get_videos():
     """
-        @api {GET} /api/v1/videos/videos 获取视频
-        @apiName 获取视频
+        @api {GET} /api/v1/videos/videos 获取视频(已完成)
+        @apiName 获取视频（已完成）
         @apiGroup 视频
         @apiVersion 1.0.0
         @apiDescription
@@ -160,8 +160,8 @@ def get_videos():
 @api.route('/v1/videos/video', methods=["GET"])
 def get_video():
     """
-    @api {GET} /api/v1/videos/video 根据序号获取单个视频
-    @apiName 根据序号获取单个视频
+    @api {GET} /api/v1/videos/video 根据序号获取单个视频（已完成）
+    @apiName 根据序号获取单个视频（已完成）
     @apiGroup 视频
     @apiVersion 1.0.0
     @apiDescription
@@ -247,8 +247,8 @@ def get_video():
 @auth.login_required
 def upload_video():
     """
-        @api {POST} /api/v1/videos/video 上传视频
-        @apiName 上传视频
+        @api {POST} /api/v1/videos/video 上传视频（已完成）
+        @apiName 上传视频（已完成）
         @apiGroup 视频
         @apiVersion 1.0.0
         @apiDescription

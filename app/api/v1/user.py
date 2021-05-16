@@ -12,14 +12,15 @@ from ...email import validate_email
 from ... import db
 from ...uploadFile import upload_file
 from ...userAuthorization import auth
+from datetime import datetime
 
 
 # over
 @api.route('/v1/users/register', methods=['POST'])
 def register():
     """
-        @api {POST} /api/v1/users/register 注册用户
-        @apiName 注册用户
+        @api {POST} /api/v1/users/register 注册用户（已完成）
+        @apiName 注册用户（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -34,6 +35,8 @@ def register():
         @apiParam {String='邮箱'} email 邮箱
         @apiParam {File} avatar 头像
         @apiParam {String} emailVerifyCode 邮箱验证码
+        @apiParam {String} birthday 生日
+        @apiParam {String} [sex] 性别
 
         @apiUse Success200
         @apiSuccess {String} data.email 刚注册用户的邮箱
@@ -81,17 +84,21 @@ def register():
         }
     """
     all_form_data = request.form
+    print(all_form_data.to_dict())
     username = all_form_data.get("username")
     password = all_form_data.get("password")
     description = all_form_data.get("description")
     email = all_form_data.get("email")
     avatar_dict = request.files.to_dict()
     email_verify_code = all_form_data.get("emailVerifyCode")
+    sex = all_form_data.get("sex")
+    birthday = all_form_data.get("birthday")
     path = None
     avatar_response = None
 
     # 缺少参数值
-    if username is None or password is None or email is None or email_verify_code is None:
+    if username is None or password is None or email is None or email_verify_code is None or birthday is None:
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         return jsonify(result=False, code=400, message='缺少参数值!', header={}, data={}), 400
     # 参数值类型错误
     if type(username) != str or type(password) != str or type(email) != str or type(email_verify_code) != str:
@@ -119,18 +126,25 @@ def register():
     for file_name in avatar_dict:
         # 获得头像文件
         avatar = avatar_dict[file_name]
-        avatar_response = upload_file(avatar, "avatar", Config.IMAGE_ALLOWED_TYPE)
-        if avatar_response.get('result') is not None:
-            return jsonify(result=avatar_response['result'], code=avatar_response['code'],
-                           message=avatar_response['message'], header=avatar_response['header'],
-                           data=avatar_response['data']), avatar_response['code']
+        print(avatar)
+        if avatar is not None and avatar != "":
+            avatar_response = upload_file(avatar, "avatar", Config.IMAGE_ALLOWED_TYPE)
+            if avatar_response.get('result') is not None:
+                return jsonify(result=avatar_response['result'], code=avatar_response['code'],
+                               message=avatar_response['message'], header=avatar_response['header'],
+                               data=avatar_response['data']), avatar_response['code']
 
     user = Users()
     user.username = username
     user.password = password
     user.description = description
     user.email = email
-    user.avatar_url = avatar_response.get("url")
+    if avatar_response is not None:
+        user.avatar_url = avatar_response.get("url")
+    else:
+        user.avatar_url = request.host_url + Config.DEFAULT_AVATAR_URL
+    user.sex = sex
+    user.birthday = datetime.strptime(birthday, "%Y-%m-%d")
     db.session.add(user)
     db.session.commit()
     return jsonify(result=True, code=200, message="", header={}, data={"email": email}), 200
@@ -140,8 +154,8 @@ def register():
 @api.route('/v1/users/login', methods=['POST'])
 def login():
     """
-        @api {POST} /api/v1/users/login 登录
-        @apiName 登录
+        @api {POST} /api/v1/users/login 登录（已完成）
+        @apiName 登录（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -159,6 +173,7 @@ def login():
 
         @apiUse Success200
         @apiSuccess {String} header.Authorization 用户认证令牌
+        @apiSuccess {Number} userId 用户编号
         @apiSuccessExample {json} 返回值示例
         {
             "result":true,
@@ -167,7 +182,9 @@ def login():
             "header":{
                 "Authorization":"jdlafhqpjdlaljsdlk"
             },
-            "data":{}
+            "data":{
+                "userId":16
+            }
         }
 
         @apiUse Errors
@@ -211,15 +228,16 @@ def login():
         return jsonify(result=False, code=403, message="账号或密码错误", header={}, data={}), 403
 
     token = user.get_authorization()
-    return jsonify(result=True, code=200, message="", header={"Authorization": token}, data={}), 200
+    user_id = user.id
+    return jsonify(result=True, code=200, message="", header={"Authorization": token}, data={"userId":user_id}), 200
 
 
 # over
 @api.route('/v1/users/user', methods=['GET'])
 def get_user_info():
     """
-        @api {GET} /api/v1/users/user 获取用户信息
-        @apiName 获取用户信息
+        @api {GET} /api/v1/users/user 获取用户信息（已完成）
+        @apiName 获取用户信息（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -358,12 +376,13 @@ def get_users():
     pass
 
 
+# over
 @api.route('/v1/users/login', methods=['GET'])
 @auth.login_required
 def get_login_status():
     """
-        @api {GET} /api/v1/users/login 获取用户的登录状态
-        @apiName 获取用户的登录状态
+        @api {GET} /api/v1/users/login 获取用户的登录状态（已完成）
+        @apiName 获取用户的登录状态（已完成）
         @apiGroup 用户
         @apiVersion 1.0.0
         @apiDescription
@@ -398,7 +417,6 @@ def get_login_status():
         @apiUse LoginExpired
         @apiUse AuthorizationError
     """
-
     return jsonify(result=True, code=200, message="", header={}, data={"isLogin": True}), 200
 
 

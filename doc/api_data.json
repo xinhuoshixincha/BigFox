@@ -2530,8 +2530,8 @@
   {
     "type": "POST",
     "url": "/api/v1/users/register",
-    "title": "注册用户",
-    "name": "注册用户",
+    "title": "注册用户（已完成）",
+    "name": "注册用户（已完成）",
     "group": "用户",
     "version": "1.0.0",
     "description": "<p>注册新用户</p>",
@@ -2608,6 +2608,20 @@
             "optional": false,
             "field": "emailVerifyCode",
             "description": "<p>邮箱验证码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "birthday",
+            "description": "<p>生日</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sex",
+            "description": "<p>性别</p>"
           }
         ]
       }
@@ -3003,8 +3017,8 @@
   {
     "type": "POST",
     "url": "/api/v1/users/login",
-    "title": "登录",
-    "name": "登录",
+    "title": "登录（已完成）",
+    "name": "登录（已完成）",
     "group": "用户",
     "version": "1.0.0",
     "description": "<p>登录</p>",
@@ -3063,6 +3077,13 @@
           },
           {
             "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>用户编号</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Boolean",
             "allowedValues": [
               "\"true -- 成功\"",
@@ -3109,7 +3130,7 @@
       "examples": [
         {
           "title": "返回值示例",
-          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{\n        \"Authorization\":\"jdlafhqpjdlaljsdlk\"\n    },\n    \"data\":{}\n}",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{\n        \"Authorization\":\"jdlafhqpjdlaljsdlk\"\n    },\n    \"data\":{\n        \"userId\":16\n    }\n}",
           "type": "json"
         }
       ]
@@ -3897,8 +3918,8 @@
   {
     "type": "GET",
     "url": "/api/v1/users/user",
-    "title": "获取用户信息",
-    "name": "获取用户信息",
+    "title": "获取用户信息（已完成）",
+    "name": "获取用户信息（已完成）",
     "group": "用户",
     "version": "1.0.0",
     "description": "<p>传入用户id获取用户的信息</p>",
@@ -4088,8 +4109,8 @@
   {
     "type": "GET",
     "url": "/api/v1/users/login",
-    "title": "获取用户的登录状态",
-    "name": "获取用户的登录状态",
+    "title": "获取用户的登录状态（已完成）",
+    "name": "获取用户的登录状态（已完成）",
     "group": "用户",
     "version": "1.0.0",
     "description": "<p>验证用户是否登录</p>",
@@ -4268,8 +4289,8 @@
   {
     "type": "POST",
     "url": "/api/v1/videos/video",
-    "title": "上传视频",
-    "name": "上传视频",
+    "title": "上传视频（已完成）",
+    "name": "上传视频（已完成）",
     "group": "视频",
     "version": "1.0.0",
     "description": "<p>通过表单上传视频及相关信息</p>",
@@ -4676,8 +4697,8 @@
   {
     "type": "GET",
     "url": "/api/v1/videos/video",
-    "title": "根据序号获取单个视频",
-    "name": "根据序号获取单个视频",
+    "title": "根据序号获取单个视频（已完成）",
+    "name": "根据序号获取单个视频（已完成）",
     "group": "视频",
     "version": "1.0.0",
     "description": "<p>传入视频序号id，根据此序号查找视频的全部信息</p>",
@@ -4890,11 +4911,6 @@
           "title": "缺少参数值",
           "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"缺少参数值!\",\n    \"header\":{},\n    \"data\":{}\n}",
           "type": "json"
-        },
-        {
-          "title": "参数类型错误",
-          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
-          "type": "json"
         }
       ]
     }
@@ -4902,8 +4918,8 @@
   {
     "type": "GET",
     "url": "/api/v1/videos/videos",
-    "title": "获取视频",
-    "name": "获取视频",
+    "title": "获取视频(已完成)",
+    "name": "获取视频（已完成）",
     "group": "视频",
     "version": "1.0.0",
     "description": "<p>可用来获取全部视频、指定数量的视频、指定排序顺序的视频、关键词匹配的视频以及分页视频</p>",
@@ -5152,14 +5168,7 @@
             "description": "<p>返回数据</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "参数类型错误",
-          "content": "{\n    \"result\":false,\n    \"code\":400,\n    \"message\":\"参数类型错误!\",\n    \"header\":{},\n    \"data\":{}\n}",
-          "type": "json"
-        }
-      ]
+      }
     }
   },
   {
@@ -6839,8 +6848,8 @@
   {
     "type": "POST",
     "url": "/api/v1/email/email",
-    "title": "发送邮件验证码",
-    "name": "发送邮件验证码",
+    "title": "发送邮件验证码（已完成）",
+    "name": "发送邮件验证码（已完成）",
     "group": "邮件",
     "version": "1.0.0",
     "description": "<p>传入邮箱地址，发送邮件验证码</p>",
