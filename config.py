@@ -21,17 +21,18 @@ class Config:
                                              'postgresql://PiLiPaLaAdmin:zhimakaimen@127.0.0.1/PiLiPaLaTest')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_AS_ASCII = os.environ.get('JSON_AS_ASCII', False)
-    AUTHORIZATION_EXPIRES_TIME = os.environ.get('AUTHORIZATION_EXPIRES_TIME', 60 * 60 * 3)
+    AUTHORIZATION_EXPIRES_TIME = os.environ.get('AUTHORIZATION_EXPIRES_TIME', 60 * 60 * 24 * 15)
     REDIS_URL = os.environ.get('REDIS_URL', "redis://:@localhost:6379/0")
 
     REDIS_USER_FILED_ONE = '_email_code'
-    REDIS_USER_FILED_ONE_EXPIRED = 60 * 3
+    REDIS_USER_FILED_ONE_EXPIRED = 60 * 30
 
     IMAGE_ALLOWED_TYPE = {'jpg', 'png', 'gif'}
     VIDEO_ALLOWED_TYPE = {'mp4', 'm4v', 'webm', 'avi', 'flv'}
 
     SEARCH_SIMILARITY = 0.45
 
+    DEFAULT_AVATAR_URL = "static/avatar/default"
     @staticmethod
     def init_app(app):
         pass

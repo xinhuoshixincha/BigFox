@@ -40,6 +40,8 @@ def send_mail_code():
         @apiUse ParamNeed
     """
     data = request.get_json()
+    if data is None:
+        return jsonify(result=False, code=400, message="缺少参数！", header={}, data={}), 400
     email = data.get("emailAddress")
     email_code = str(random.randint(10000, 99999))
     send_email(email, 'BIGFOX验证码', "验证码："+email_code)

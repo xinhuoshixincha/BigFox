@@ -2608,6 +2608,20 @@ define({ "api": [
             "optional": false,
             "field": "emailVerifyCode",
             "description": "<p>邮箱验证码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "birthday",
+            "description": "<p>生日</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "sex",
+            "description": "<p>性别</p>"
           }
         ]
       }
@@ -3063,6 +3077,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>用户编号</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Boolean",
             "allowedValues": [
               "\"true -- 成功\"",
@@ -3109,7 +3130,7 @@ define({ "api": [
       "examples": [
         {
           "title": "返回值示例",
-          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{\n        \"Authorization\":\"jdlafhqpjdlaljsdlk\"\n    },\n    \"data\":{}\n}",
+          "content": "{\n    \"result\":true,\n    \"code\":200,\n    \"message\":\"\",\n    \"header\":{\n        \"Authorization\":\"jdlafhqpjdlaljsdlk\"\n    },\n    \"data\":{\n        \"userId\":16\n    }\n}",
           "type": "json"
         }
       ]
